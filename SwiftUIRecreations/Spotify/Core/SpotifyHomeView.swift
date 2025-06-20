@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
-
+import SwiftfulUI
 struct SpotifyHomeView: View {
     @State private var currentUser:User? = nil
+    @State private var products:[Product] = []
     @State private var selectedCategory:Category? = Category.all
     var body: some View {
         ZStack{
@@ -17,14 +18,14 @@ struct SpotifyHomeView: View {
                 
                 LazyVStack(pinnedViews:[.sectionHeaders] ) {
                     Section {
-                        ForEach(0..<20){_ in
-                            
-                            Rectangle()
-                                .frame(width: .infinity,height: 50)
-                                .background(.spotifyWhite)
-                            
-                            
-                        }
+                        VStack{
+                            recentsSection
+                            if let firstProduct = products.first{
+                                newReleaseProduct(product: firstProduct)
+
+                            }
+                        }.padding(.horizontal,16 )
+                        
                     } header:{
                         header
                     }
@@ -46,6 +47,7 @@ struct SpotifyHomeView: View {
     private func getData()async {
         do{
             currentUser = try await DatabaseHelper().getUsers().first
+            products = try await Array(DatabaseHelper().getProducts().prefix(8))
             
         }  catch {
             
@@ -55,6 +57,36 @@ struct SpotifyHomeView: View {
 
 
 extension SpotifyHomeView {
+    private var recentsSection: some View {
+        
+        NonLazyVGrid(
+            columns:2,
+            alignment: .center,
+            spacing: 10,
+            items: products
+            
+            
+        ) { product in
+            
+            if let product{
+                SpotifyRecentsCell(
+                    imageName: product.firstImage,
+                    title: product.title
+                    
+                )
+            }
+        }
+    }
+    
+    
+    private func newReleaseProduct(product:Product)-> some View{
+        SpotifyNewReleaseCell(imageName: product.firstImage, headline: product.brand, subHeadline: product.brand, title: product.title, subtitle: product.description)  {
+            
+        } onPlayButtonPressed: {
+            
+        }
+    }
+    
     private var header: some View {
         HStack(spacing: 0){
             HStack{

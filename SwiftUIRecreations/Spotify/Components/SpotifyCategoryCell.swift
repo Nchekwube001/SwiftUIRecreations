@@ -16,16 +16,25 @@ struct SpotifyCategoryCell: View {
             .frame(minWidth: 35)
             .padding(.vertical, 8)
             .padding(.horizontal, 12)
+            .themeColors(isSelected: isSelected)
         
         
+            .clipShape(Capsule())
+        
+    }
+}
+
+
+extension View {
+    func themeColors (isSelected:Bool)-> some View {
+        self
             .background(
                 isSelected ? .spotifyGreen : .spotifyDarkGray
             )
             .foregroundStyle(
                 isSelected ? .spotifyBlack : .spotifyWhite
             )
-            .clipShape(Capsule())
-
+        
     }
 }
 
@@ -34,5 +43,5 @@ struct SpotifyCategoryCell: View {
         Color.spotifyBlack.ignoresSafeArea()
         SpotifyCategoryCell()
     }
-
+    
 }
