@@ -206,7 +206,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 1502DB392E058F6900CC0A79 /* Build configuration list for PBXProject "SwiftUIRecreations" */;
+			buildConfigurationList = 1502DB392E058F6900CC0A79 /* Build configuration list for PBXProject " " */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -546,7 +546,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1502DB392E058F6900CC0A79 /* Build configuration list for PBXProject "SwiftUIRecreations" */ = {
+		1502DB392E058F6900CC0A79 /* Build configuration list for PBXProject " " */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1502DB602E058F6B00CC0A79 /* Debug */,
