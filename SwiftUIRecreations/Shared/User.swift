@@ -15,7 +15,7 @@ struct UsersArray: Codable {
     let total, skip, limit: Int
 }
 
-struct User: Codable {
+struct User: Codable,Identifiable {
     let id: Int
     let firstName, lastName, maidenName: String
     let age: Int

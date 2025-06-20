@@ -15,7 +15,7 @@ struct ProductsArray: Codable {
 }
 
 
-struct Product: Codable {
+struct Product: Codable,Identifiable {
     let id: Int
     let title, description: String
     let price, discountPercentage, rating: Double
