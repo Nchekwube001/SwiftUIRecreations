@@ -13,10 +13,33 @@ struct SpotifyHomeView: View {
     var body: some View {
         ZStack{
             Color.spotifyBlack.ignoresSafeArea()
-            header
+            ScrollView{
+                
+                LazyVStack(pinnedViews:[.sectionHeaders] ) {
+                    Section {
+                        ForEach(0..<20){_ in
+                            
+                            Rectangle()
+                                .frame(width: .infinity,height: 50)
+                                .background(.spotifyWhite)
+                            
+                            
+                        }
+                    } header:{
+                        header
+                    }
+                }
+                .padding(.top,20)
+                
+                
+                
+            }
+            .scrollIndicators(.hidden)
+            .clipped()
         }.task {
             await getData()
         }
+        .toolbar(.hidden,for: .navigationBar)
     }
     
     
@@ -58,7 +81,11 @@ extension SpotifyHomeView {
                 }
                 .padding(.horizontal,16)
             }
+            .scrollIndicators(.hidden)
         }
+        .padding(.vertical,20)
+        .padding(.leading,16)
+        .background(.spotifyBlack)
     }
 }
 
