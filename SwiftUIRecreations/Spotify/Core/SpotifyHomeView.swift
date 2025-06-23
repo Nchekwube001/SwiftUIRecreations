@@ -7,11 +7,15 @@
 
 import SwiftUI
 import SwiftfulUI
+import SwiftfulRouting
+
 struct SpotifyHomeView: View {
     @State private var currentUser:User? = nil
     @State private var products:[Product] = []
     @State private var productsArray:[ProductsArray] = []
     @State private var productRows:[ProductRow] = []
+    @Environment(\.router) var router
+
     @State private var selectedCategory:Category? = Category.all
     var body: some View {
         ZStack{
@@ -49,6 +53,7 @@ struct SpotifyHomeView: View {
             .scrollIndicators(.hidden)
             .clipped()
         }.task {
+            guard products.isEmpty else{return}
             await getData()
         }
         .toolbar(.hidden,for: .navigationBar)
@@ -62,7 +67,7 @@ struct SpotifyHomeView: View {
             var rows : [ProductRow] = []
             let allBrands = Set(products.map({$0.brand}))
             for brand in allBrands {
-                let product  = self.products
+//                let product  = self.products
                 
                 if let brand{
                     
@@ -101,7 +106,7 @@ extension SpotifyHomeView {
                     
                 )
                 .asButton (.press){
-                    
+                    goToPlaylistView(product: product)
                 }
             }
         }
@@ -112,7 +117,7 @@ extension SpotifyHomeView {
         SpotifyNewReleaseCell(imageName: product.firstImage, headline: product.brand, subHeadline: product.brand, title: product.title, subtitle: product.description)  {
             
         } onPlayButtonPressed: {
-            
+            goToPlaylistView(product: product)
         }
     }
     private var listRows:some View{
@@ -135,7 +140,7 @@ extension SpotifyHomeView {
                                 imageSize: 120, imageName: item.firstImage, title: item.title
                             )
                             .asButton(.press) {
-                                
+                                goToPlaylistView(product: item)
                             }
                             
                         }
@@ -148,16 +153,25 @@ extension SpotifyHomeView {
             
         }
     }
+    
+    private func goToPlaylistView (product:Product){
+        guard let currentUser else {return}
+        router.showScreen(.push){ _ in
+            SpotifyPlaylistView(product: product, user: currentUser)
+            
+        }
+    }
+    
     private var header: some View {
         HStack(spacing: 0){
             HStack{
                 if let currentUser {
                     ImageLoaderview(url: currentUser.image )
-                        .frame(width: 30,height: 30)
+//                        .frame(width: 30,height: 30)
                         .background(.spotifyWhite)
                         .clipShape(Circle())
                         .onTapGesture {
-                            
+                            router.dismissScreen()
                         }
                     
                 }
@@ -183,5 +197,7 @@ extension SpotifyHomeView {
 }
 
 #Preview {
-    SpotifyHomeView()
+    RouterView{ _ in
+        SpotifyHomeView()
+    }
 }
