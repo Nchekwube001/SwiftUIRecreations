@@ -10,6 +10,8 @@ import SwiftfulUI
 struct SpotifyHomeView: View {
     @State private var currentUser:User? = nil
     @State private var products:[Product] = []
+    @State private var productsArray:[ProductsArray] = []
+    @State private var productRows:[ProductRow] = []
     @State private var selectedCategory:Category? = Category.all
     var body: some View {
         ZStack{
@@ -20,11 +22,20 @@ struct SpotifyHomeView: View {
                     Section {
                         VStack{
                             recentsSection
+                                .padding(.horizontal,16 )
                             if let firstProduct = products.first{
                                 newReleaseProduct(product: firstProduct)
-
+                                    .padding(.horizontal,16 )
+                                
                             }
-                        }.padding(.horizontal,16 )
+                            
+                            
+                          listRows
+                            
+                            
+                            
+                            
+                        }
                         
                     } header:{
                         header
@@ -48,6 +59,21 @@ struct SpotifyHomeView: View {
         do{
             currentUser = try await DatabaseHelper().getUsers().first
             products = try await Array(DatabaseHelper().getProducts().prefix(8))
+            var rows : [ProductRow] = []
+            let allBrands = Set(products.map({$0.brand}))
+            for brand in allBrands {
+                let product  = self.products
+                
+                if let brand{
+                    
+                    
+                    rows.append(ProductRow(title:brand.capitalized, products: products))
+                    
+                }
+            }
+            
+            productRows = rows
+            
             
         }  catch {
             
@@ -74,6 +100,9 @@ extension SpotifyHomeView {
                     title: product.title
                     
                 )
+                .asButton (.press){
+                    
+                }
             }
         }
     }
@@ -86,7 +115,39 @@ extension SpotifyHomeView {
             
         }
     }
-    
+    private var listRows:some View{
+        ForEach(productRows){ rowItem in
+            VStack(spacing: 8){
+                Text(rowItem.title)
+                    .font(.title)
+                    .foregroundStyle(.spotifyWhite)
+                    .fontWeight(.semibold)
+                    .frame(maxWidth:.infinity, alignment: .leading)
+                    .padding(.horizontal,16 )
+                
+                
+                ScrollView(.horizontal) {
+                    HStack(alignment:.top, spacing:16) {
+                        
+                        ForEach(rowItem.products){ item in
+                    
+                            ImageTitleRowCell(
+                                imageSize: 120, imageName: item.firstImage, title: item.title
+                            )
+                            .asButton(.press) {
+                                
+                            }
+                            
+                        }
+                    }
+                    .padding(.horizontal,16 )
+                }
+                
+            }
+            
+            
+        }
+    }
     private var header: some View {
         HStack(spacing: 0){
             HStack{

@@ -29,6 +29,34 @@ struct User: Codable,Identifiable {
     let macAddress, university: String
     let ein, ssn, userAgent: String
     let role: Role
+    
+    
+    static var Mock :User {
+        User(
+            id: 1222,
+            firstName: "String",
+            lastName: "String",
+            maidenName: "String",
+            age:23,
+            gender: .male,
+            email: "String",
+            phone: "String",
+            username: "String",
+            password: "String",
+            birthDate: "String",
+            image: "String",
+            bloodGroup: "String",
+            height: 23,
+            weight: 123,
+            eyeColor: "String",
+            macAddress: "String",
+            university: "String",
+            ein: "String",
+            ssn: "String",
+            userAgent: "String",
+            role: .admin
+        )
+    }
 }
 
 
